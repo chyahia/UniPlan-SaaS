@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة رئيس القسم - UniPlan</title>
+    <style>
+        :root {
+            --primary-teaching: #f39c12;
+            --hover-teaching: #e67e22;
+            --primary-exams: #3f51b5;
+            --hover-exams: #303f9f;
+            --primary-resit: #27ae60;
+            --hover-resit: #2ecc71;
+            --bg-color: #f4f7f6;
+            --text-main: #2c3e50;
+            --text-muted: #7f8c8d;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            /* أضفنا هذا لضمان تموضع الأزرار نسبة للصفحة */
+            position: relative; 
+        }
+
+        .portal-container {
+            text-align: center;
+            max-width: 1200px;
+            width: 100%;
+            padding: 20px;
+        }
+
+        .header {
+            margin-bottom: 50px;
+        }
+
+        .header h1 {
+            color: var(--text-main);
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: var(--text-muted);
+            font-size: 18px;
+            margin-top: 0;
+        }
+
+        .cards-wrapper {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .system-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 40px 30px;
+            width: 320px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border-top: 6px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .system-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .system-card.teaching { border-top-color: var(--primary-teaching); }
+        .system-card.teaching .card-icon { background: rgba(243, 156, 18, 0.1); color: var(--primary-teaching); }
+        .system-card.teaching .card-btn { background: var(--primary-teaching); }
+        .system-card.teaching:hover .card-btn { background: var(--hover-teaching); transform: scale(1.05); }
+
+        .system-card.exams { border-top-color: var(--primary-exams); }
+        .system-card.exams .card-icon { background: rgba(63, 81, 181, 0.1); color: var(--primary-exams); }
+        .system-card.exams .card-btn { background: var(--primary-exams); }
+        .system-card.exams:hover .card-btn { background: var(--hover-exams); transform: scale(1.05); }
+
+        .system-card.resit { border-top-color: var(--primary-resit); }
+        .system-card.resit .card-icon { background: rgba(39, 174, 96, 0.1); color: var(--primary-resit); }
+        .system-card.resit .card-btn { background: var(--primary-resit); }
+        .system-card.resit:hover .card-btn { background: var(--hover-resit); transform: scale(1.05); }
+
+        .card-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .card-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--text-main);
+        }
+
+        .card-desc {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 30px;
+            flex-grow: 1;
+        }
+
+        .card-btn {
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: bold;
+            color: #fff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 15px;
+            width: 80%;
+        }
+
+        /* 🌟 التعديل الأساسي هنا: رفع الأزرار لأعلى اليسار */
+        .logout-wrapper {
+            position: absolute;
+            top: 25px;
+            left: 25px;
+            display: flex;
+            gap: 15px; /* مسافة متساوية بين الأزرار */
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .logout-btn {
+            color: #e74c3c;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 16px;
+            border: 2px solid #e74c3c;
+            padding: 10px 25px;
+            border-radius: 8px;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logout-btn:hover {
+            background: #e74c3c;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- تم إخراج الحاوية الخاصة بالأزرار من الـ portal-container لتأخذ موضعها بحرية -->
+    <div class="logout-wrapper">
+        <a href="/logout" class="logout-btn">
+            <span>تسجيل الخروج</span> 🚪
+        </a>
+        {% if config.get('APP_MODE') == 'desktop' %}
+        <!-- تمت إزالة الهامش المباشر (margin-right) ليتحكم الـ gap في المسافات -->
+        <button onclick="shutdownServer()" style="background: #c0392b; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; font-family: inherit; font-size: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: 0.3s;" onmouseover="this.style.background='#e74c3c'" onmouseout="this.style.background='#c0392b'">
+            🛑 إيقاف النظام
+        </button>
+        {% endif %}
+    </div>
+
+    <div class="portal-container">
+        <div class="header">
+            <div style="font-size: 60px; margin-bottom: 10px;">🏛️</div>
+            <h1>مرحباً بك في منصة UniPlan السحابية</h1>
+            <p>بوابة رئيس القسم - يرجى اختيار النظام لإدارة العمليات الأكاديمية</p>
+        </div>
+
+        <div class="cards-wrapper">
+            
+            {% if tenant.has_teaching %}
+            <a href="/teaching" class="system-card teaching">
+                <div class="card-icon">🗓️</div>
+                <div class="card-title">نظام الجداول الدراسية</div>
+                <div class="card-desc">إدارة أساتذة ومواد التدريس، توزيع القاعات، وتوليد جداول الحصص الأسبوعية باستخدام الخوارزميات الذكية.</div>
+                <div class="card-btn">الدخول للنظام</div>
+            </a>
+            {% else %}
+            <div class="system-card" style="opacity: 0.6; filter: grayscale(100%); cursor: not-allowed; border-top-color: #95a5a6;">
+                <div class="card-icon" style="background: #ecf0f1; color: #7f8c8d;">🔒</div>
+                <div class="card-title" style="color: #7f8c8d;">نظام الجداول الدراسية</div>
+                <div class="card-desc">هذا النظام غير مفعل لقسمك حالياً. يرجى التواصل مع الإدارة المركزية لتفعيله.</div>
+                <div class="card-btn" style="background: #95a5a6;">غير مصرح</div>
+            </div>
+            {% endif %}
+
+            {% if tenant.has_exams %}
+            <a href="/exams" class="system-card exams">
+                <div class="card-icon">🎓</div>
+                <div class="card-title">حراسة الامتحانات (السداسية)</div>
+                <div class="card-desc">سحب الأساتذة من التدريس، توزيع الحراسات، تحقيق التوازن العادل، وتوليد جداول الامتحانات النهائية.</div>
+                <div class="card-btn">الدخول للنظام</div>
+            </a>
+            {% else %}
+            <div class="system-card" style="opacity: 0.6; filter: grayscale(100%); cursor: not-allowed; border-top-color: #95a5a6;">
+                <div class="card-icon" style="background: #ecf0f1; color: #7f8c8d;">🔒</div>
+                <div class="card-title" style="color: #7f8c8d;">حراسة الامتحانات (السداسية)</div>
+                <div class="card-desc">هذا النظام غير مفعل لقسمك حالياً. يرجى التواصل مع الإدارة المركزية لتفعيله.</div>
+                <div class="card-btn" style="background: #95a5a6;">غير مصرح</div>
+            </div>
+            {% endif %}
+
+            {% if tenant.has_exams %}
+            <a href="/resit_exams/" class="system-card resit">
+                <div class="card-icon">♻️</div>
+                <div class="card-title">الامتحانات الاستدراكية</div>
+                <div class="card-desc">إدارة حراسات الاستدراكي مع استيراد سريع للبيانات المشتركة، وتوزيع مخصص يتناسب مع معايير الأولوية للأساتذة.</div>
+                <div class="card-btn">الدخول للنظام</div>
+            </a>
+            {% else %}
+            <div class="system-card" style="opacity: 0.6; filter: grayscale(100%); cursor: not-allowed; border-top-color: #95a5a6;">
+                <div class="card-icon" style="background: #ecf0f1; color: #7f8c8d;">🔒</div>
+                <div class="card-title" style="color: #7f8c8d;">الامتحانات الاستدراكية</div>
+                <div class="card-desc">هذا النظام غير مفعل لقسمك حالياً. يرجى التواصل مع الإدارة المركزية لتفعيله.</div>
+                <div class="card-btn" style="background: #95a5a6;">غير مصرح</div>
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+
+    <script>
+        function shutdownServer() {
+            if (confirm("هل أنت متأكد أنك تريد إيقاف الخادم وإغلاق النظام بالكامل؟")) {
+                fetch('/shutdown', { method: 'POST' })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        document.body.innerHTML = "<h2 style='text-align:center; margin-top:20%; color:#2c3e50;'>تم إيقاف النظام بنجاح. يمكنك الآن إغلاق هذه النافذة بأمان.</h2>";
+                        setTimeout(() => window.close(), 2000); // محاولة إغلاق النافذة
+                    } else {
+                        alert(data.error);
+                    }
+                })
+                .catch(err => {
+                    // في حال انقطع الاتصال فوراً بسبب استجابة الخادم السريعة للإغلاق
+                    document.body.innerHTML = "<h2 style='text-align:center; margin-top:20%; color:#2c3e50;'>تم إيقاف النظام بنجاح. يمكنك الآن إغلاق هذه النافذة بأمان.</h2>";
+                });
+            }
+        }
+    </script>
+
+</body>
+</html>
