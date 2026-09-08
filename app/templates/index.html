@@ -104,7 +104,7 @@
                         <option value="أعمال موجهة" selected>أعمال موجهة</option>
                         <option value="أعمال تطبيقية">أعمال تطبيقية</option>
                     </select>
-                    <button onclick="openNatureModal()" style="background: none; border: none; font-size: 20px; cursor: pointer; padding: 0 5px;" title="إعدادات الرموز البيداغوجية">⚙️</button>
+                    
                 </div>
 
                 <select id="course-room-type-select" style="width: 100%; padding: 5px; margin-bottom: 5px;" title="هذا الخيار يُستخدم فقط مع الإضافة المباشرة">
@@ -118,6 +118,7 @@
                 <div style="display: flex; gap: 5px; margin-top: 10px;">
                     <button onclick="addCourses()" style="flex: 1; padding: 8px; background: #e67e22; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;" title="إضافة النصوص كما هي للقاعة المحددة">إضافة مباشرة</button>
                     <button onclick="openCourseWizard()" style="flex: 1; padding: 8px; background: #8e44ad; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;" title="توليد المحاضرات والأفواج آلياً">⚙️ توليد الأفواج أو التخصصات</button>
+                    <button onclick="openNatureModal()" style="padding: 8px 15px; background: #34495e; color: white; border: none; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center;" title="إعدادات الرموز البيداغوجية">⚙️</button>
                 </div>
                 
                 <div id="courses-preview" class="preview-box"><i>لا توجد مواد...</i></div>
@@ -1420,6 +1421,12 @@
             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
                 <label style="font-weight: bold; color: #2c3e50; font-size: 14px;">📕 أعمال تطبيقية:</label>
                 <input type="text" id="symbol-tp" placeholder="[أت]" style="width: 80px; text-align: center; padding: 6px; border: 1px solid #bdc3c7; border-radius: 4px; font-weight: bold; font-family: inherit;">
+            </div>
+
+            <!-- الخانة الجديدة الخاصة برمز الفوج -->
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+                <label style="font-weight: bold; color: #2c3e50; font-size: 14px;">👥 رمز الفوج:</label>
+                <input type="text" id="symbol-grp" placeholder=" ف" style="width: 80px; text-align: center; padding: 6px; border: 1px solid #bdc3c7; border-radius: 4px; font-weight: bold; font-family: inherit;" title="ضع مسافة قبل الحرف إذا أردت فصله عن الرمز البيداغوجي">
             </div>
 
             <div style="display: flex; gap: 10px;">
